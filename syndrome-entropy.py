@@ -1,3 +1,4 @@
+
 import argparse
 import math
 from collections import Counter
@@ -79,7 +80,8 @@ def marginal_entropy_sum(rows: np.ndarray) -> float:
     return float(sum(h_nats(float(f)) for f in freq))
 
 
-def measure(distance: int, p: float, shots: int, max_bits: int, seed: int):
+def measure(distance: int, p: float, shots: int, max_bits: int, seed: int,
+            max_unique_frac: float = 0.1):
     rounds = max(distance, 3) + 3
     circuit = build_circuit("z", distance, rounds, p)
     by_t = {}
@@ -95,7 +97,8 @@ def measure(distance: int, p: float, shots: int, max_bits: int, seed: int):
     rows_pair = det[:, prev + cur]
 
     h_marg = marginal_entropy_sum(rows_cur)
-    if len(prev) + len(cur) <= max_bits:
+    unique_frac = len(np.unique(np.packbits(rows_pair, axis=1), axis=0)) / shots
+    if len(prev) + len(cur) <= max_bits and unique_frac <= max_unique_frac:
         h_cond = plugin_entropy_mm(rows_pair) - plugin_entropy_mm(det[:, prev])
     else:
         h_cond = float("nan")
@@ -104,6 +107,7 @@ def measure(distance: int, p: float, shots: int, max_bits: int, seed: int):
         "H_marg": h_marg,
         "H_cond": h_cond,
         "H_faults": per_round_fault_entropy("z", distance, p),
+        "unique_frac": unique_frac,
     }
 
 
