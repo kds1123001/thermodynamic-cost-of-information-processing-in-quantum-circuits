@@ -1,0 +1,33 @@
+flowchart TD
+    subgraph CFG["Configuration & Sweep"]
+        P["Physical Error Rate Sweep<br/>(error probabilities / grid)"]
+        SC["Surface Code Parameters<br/>(distance d, rounds, noise model)"]
+    end
+
+    subgraph SIM["Quantum Circuit & Syndrome Simulation"]
+        STIM["Stim Circuit Builder & Sampler<br/>(stabilizer circuit + detector/obs samples)"]
+        SYN["Syndrome & Logical Outcomes<br/>(detection events, logical flips)"]
+    end
+
+    subgraph THERMO["Information & Thermodynamic Metrics"]
+        H_SYN["Syndrome Entropy Estimation<br/>(empirical / Shannon entropy from samples)"]
+        H_IND["Independent-Fault Entropy Bound<br/>(analytical / factorized fault baseline)"]
+        LAND["Landauer Cost & Power Model<br/>(erasure work W >= k_B T ln 2 * delta_S,<br/>power & rate scaling)"]
+    end
+
+    subgraph OUT["Analysis & Artifacts"]
+        PLOT["Sweep Plots & Comparisons<br/>(entropy & power vs. physical error rate)"]
+        DOCS["README & Paper Context<br/>(motivation, assumptions, scope)"]
+    end
+
+    SC --> STIM
+    P --> STIM
+    P --> H_IND
+    STIM --> SYN
+    SYN --> H_SYN
+    H_SYN --> LAND
+    H_IND --> LAND
+    H_SYN --> PLOT
+    H_IND --> PLOT
+    LAND --> PLOT
+    DOCS -.->|"frames scope & context"| PLOT
