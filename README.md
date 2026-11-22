@@ -8,3 +8,5 @@ A working draft for a paper applying Lindblad GKSL dynamics and quantum relative
 ## ai usage
 
 this is the first repo where I used generative AI to create me a flowchart of the project for new researchers, I am lowk sad that I had to use it as there were my exams and allat shi jus dont flame me ong
+
+- see flowchart.mermaid for clearer info and visual shit
